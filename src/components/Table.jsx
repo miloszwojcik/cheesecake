@@ -2,21 +2,22 @@ import React from "react";
 
 export default function Table({ columns, rows, getSelect }) {
   return (
-    <div role="table" aria-label="location table">
-      <div role="rowgroup">
-        <div role="row">
-          {columns.map((column) => (
-            <span role="columnheader">{getSelect(column)}</span>
+    <div className="table" role="table" aria-label="location table">
+      <div className="rowgroup" role="rowgroup">
+        <div className="row" role="row">
+          {columns.map((column, i) => (
+            <span className="columnheader" role="columnheader" key={i}>
+              {getSelect(column)}
+            </span>
           ))}
         </div>
       </div>
-      <div role="rowgroup">
+      <div className="rowgroup" role="rowgroup">
         {rows.map((row, i) => (
-          <div role="row" aria-rowindex={i} key={i}>
+          <div className="row" role="row" aria-rowindex={i} key={i}>
             {row.map((rowData) => (
-              <span role="cell" key={rowData.id}>
+              <span className="cell" role="cell" key={rowData.id}>
                 {rowData.label}
-                {rowData.id}
               </span>
             ))}
           </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Table from "./Table";
 
 const getId = () => Math.random();
@@ -11,10 +11,14 @@ const options = [
   { label: "Category", value: "category" },
 ];
 
+const limitText = "Max number of columns exceeded";
+
 export default function CsvReader() {
   const [csvFile, setCsvFile] = useState();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
+
+  useEffect(() => {}, [columns]);
 
   const processCSV = (str, delim = ",") => {
     const rawRows = str.split("\n");
@@ -24,12 +28,17 @@ export default function CsvReader() {
     for (let i = 0; i < maxCols; i++) {
       idArray = [...idArray, getId()];
     }
+
     let columns = [];
 
     for (let i = 0; i < maxCols; i++) {
       columns = [
         ...columns,
-        { id: idArray[i], value: options[i].value, label: options[i].label },
+        {
+          id: idArray[i],
+          value: options[i]?.value || "none",
+          label: options[i]?.label || "none",
+        },
       ];
     }
 
@@ -47,19 +56,37 @@ export default function CsvReader() {
   };
 
   const selectChange = ({ id, value }) => {
-    setColumns((prevCols) =>
-      prevCols.map((col) => {
+    setColumns((prevCols) => {
+      let prevColumn = {};
+
+      const updatedColumns = prevCols.map((col) => {
         if (col.id === id) {
+          prevColumn = col;
+
           return {
             ...col,
             value,
-            label: options.find((opt) => opt.value === value).label,
+            label: options.find((opt) => opt.value === value)?.label || null,
           };
         }
 
         return col;
-      })
-    );
+      });
+
+      const removeRepeatedValue = updatedColumns.map((newCol) => {
+        if (id !== newCol.id && value === newCol.value) {
+          return {
+            ...newCol,
+            value: prevColumn?.value,
+            label: prevColumn?.label,
+          };
+        }
+
+        return newCol;
+      });
+
+      return removeRepeatedValue;
+    });
   };
 
   const getSelect = ({ id, value }) => (
@@ -68,6 +95,9 @@ export default function CsvReader() {
       onChange={(e) => selectChange({ id, value: e.target.value })}
       value={value}
     >
+      <option value="none" disabled hidden>
+        {limitText}
+      </option>
       {options.map(({ value, label }) => (
         <option key={value} value={value}>
           {label}
