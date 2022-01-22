@@ -102,7 +102,8 @@ export default function CsvReader() {
         <button
           onClick={(e) => {
             e.preventDefault();
-            if (csvFile) submit();
+
+            csvFile && submit();
           }}
         >
           Submit
