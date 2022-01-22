@@ -118,6 +118,17 @@ export default function CsvReader() {
     reader.readAsText(csvFile);
   };
 
+  const transformData = () => {
+    const applyCategory = rows.map((row) =>
+      row.map((cell, i) => ({
+        ...cell,
+        type: columns.find((col) => col.id === cell.id).value,
+      }))
+    );
+
+    console.log("applyCategory", applyCategory);
+  };
+
   return (
     <>
       <form id="csv-form">
@@ -142,6 +153,7 @@ export default function CsvReader() {
       {rows.length > 0 && (
         <Table rows={rows} columns={columns} getSelect={getSelect} />
       )}
+      <button onClick={transformData}>Transform</button>
     </>
   );
 }
