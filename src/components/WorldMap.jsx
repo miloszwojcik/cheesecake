@@ -6,21 +6,24 @@ const projection = geoEqualEarth()
   .scale(160)
   .translate([800 / 2, 450 / 2]);
 
-const WorldMap = () => {
+const WorldMap = ({ places }) => {
   const [geographies, setGeographies] = useState([]);
   const [marker, setMarker] = useState(null);
 
   useEffect(() => {
     const data = {
-      location: {
-        street: "",
-        postalCode: "",
-        city: "",
-      },
+      locations: places.map((place) => ({
+        street: place.find((v) => v.type === "address").label,
+        postalCode: place.find((v) => v.type === "zip").label,
+        city: place.find((v) => v.type === "city").label,
+      })),
       options: {
         thumbMaps: false,
       },
     };
+
+    console.log("data", data);
+
     const options = {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
@@ -36,7 +39,7 @@ const WorldMap = () => {
     };
 
     fetch(
-      "http://www.mapquestapi.com/geocoding/v1/address?key=FHZdqT8GWrAggBJLnSnDzjqFA9hbsMdc",
+      "http://www.mapquestapi.com/geocoding/v1/batch?key=FHZdqT8GWrAggBJLnSnDzjqFA9hbsMdc",
       options
     )
       .then((response) => {

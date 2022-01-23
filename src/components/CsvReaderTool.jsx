@@ -18,6 +18,7 @@ export default function CsvReader() {
   const [csvFile, setCsvFile] = useState();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [places, setPlaces] = useState([]);
 
   useEffect(() => {}, [columns]);
 
@@ -127,7 +128,7 @@ export default function CsvReader() {
       }))
     );
 
-    console.log("applyCategory", applyCategory);
+    setPlaces(applyCategory);
   };
 
   return (
@@ -155,7 +156,7 @@ export default function CsvReader() {
         <Table rows={rows} columns={columns} getSelect={getSelect} />
       )}
       <button onClick={transformData}>Transform</button>
-      <WorldMap />
+      {places.length > 0 && <WorldMap places={places} />}
     </>
   );
 }
