@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Table from "./Table";
+import WorldMap from "./WorldMap";
 
 const getId = () => Math.random();
 
@@ -154,6 +155,7 @@ export default function CsvReader() {
         <Table rows={rows} columns={columns} getSelect={getSelect} />
       )}
       <button onClick={transformData}>Transform</button>
+      <WorldMap />
     </>
   );
 }
