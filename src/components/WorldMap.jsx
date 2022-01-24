@@ -10,7 +10,7 @@ const projection = geoEqualEarth()
 
 const WorldMap = ({ places }) => {
   const [geographies, setGeographies] = useState([]);
-  const [marker, setMarker] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
     const data = {
@@ -33,9 +33,11 @@ const WorldMap = ({ places }) => {
         }
       })
       .then((responseJson) => {
-        const coordinates = responseJson.results[0].locations[0].latLng;
+        const coordinates = responseJson.results.map((res) => {
+          return res.locations[0]?.latLng;
+        });
 
-        setMarker([coordinates.lng, coordinates.lat]);
+        setMarkers(coordinates);
       })
       .catch((error) => {
         console.log(error);
@@ -83,17 +85,22 @@ const WorldMap = ({ places }) => {
         ))}
       </g>
       <g className="markers">
-        {marker && (
-          <circle
-            cx={projection(marker)[0]}
-            cy={projection(marker)[1]}
-            r={5}
-            fill="#E91E63"
-            stroke="#FFFFFF"
-            className="marker"
-            onClick={() => handleMarkerClick()}
-          />
-        )}
+        {markers.length &&
+          markers.map((marker, i) => {
+            console.log("markaer", marker);
+            return (
+              <circle
+                key={i}
+                cx={projection([marker.lng, marker.lat])[0]}
+                cy={projection([marker.lng, marker.lat])[1]}
+                r={5}
+                fill="#E91E63"
+                stroke="#FFFFFF"
+                className="marker"
+                onClick={() => handleMarkerClick()}
+              />
+            );
+          })}
       </g>
     </svg>
   );

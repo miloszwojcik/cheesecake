@@ -22,6 +22,7 @@ function App() {
     const rawRows = str.split("\n");
     const maxCols = Math.max(...rawRows.map((row) => row.split(delim).length));
     let idArray = [];
+    const maxRows = 20;
 
     for (let i = 0; i < maxCols; i++) {
       idArray = [...idArray, getId()];
@@ -49,7 +50,13 @@ function App() {
       return values;
     });
 
-    setRows(rows);
+    const sliceRows = rows.slice(0, maxRows);
+
+    if (rows.length > maxRows) {
+      alert(`Max number of rows ${maxRows}.`);
+    }
+
+    setRows(sliceRows);
     setColumns(columns);
   };
 
@@ -92,6 +99,10 @@ function App() {
 
     reader.onload = function (e) {
       const text = e.target.result;
+
+      setRows([]);
+      setColumns([]);
+      setPlaces([]);
 
       processCSV(text);
     };
