@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import Button from "./Button/Button";
 
 const FileUploader = ({ onFileSelectSuccess, onFileSelectError }) => {
   const fileInput = useRef(null);
@@ -11,6 +12,8 @@ const FileUploader = ({ onFileSelectSuccess, onFileSelectError }) => {
     else onFileSelectSuccess(file);
   };
 
+  const onClick = (e) => fileInput.current && fileInput.current.click();
+
   return (
     <div className="file-uploader">
       <input
@@ -21,13 +24,7 @@ const FileUploader = ({ onFileSelectSuccess, onFileSelectError }) => {
         ref={fileInput}
         style={{ display: "none" }}
       />
-      <button
-        htmlFor="csvFile"
-        onClick={(e) => fileInput.current && fileInput.current.click()}
-        className="btn btn-primary"
-      >
-        Upload
-      </button>
+      <Button doClick={onClick} label="Upload" />
     </div>
   );
 };

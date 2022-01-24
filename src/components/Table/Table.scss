@@ -1,0 +1,27 @@
+.table {
+  display: table;
+  padding: 20px;
+  > div[id] {
+    display: table-caption;
+    font-style: italic;
+  }
+  [role="row"] {
+    display: table-row;
+    &:nth-of-type(even) {
+      color: gray;
+    }
+  }
+  [role="cell"],
+  [role="columnheader"] {
+    display: table-cell;
+    padding: 0.125em 0.25em;
+    width: 8em;
+  }
+  [role="columnheader"] {
+    font-weight: bold;
+    border-bottom: thin solid rgb(0, 0, 0);
+  }
+  [role="rowgroup"]:last-child [role="row"]:nth-child(odd) {
+    background-color: rgb(32, 29, 29);
+  }
+}

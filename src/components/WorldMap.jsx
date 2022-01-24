@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { geoEqualEarth, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
+import api from "../utils/api.json";
+import { getOptions } from "../utils/utils";
 
 const projection = geoEqualEarth()
   .scale(160)
@@ -22,48 +24,39 @@ const WorldMap = ({ places }) => {
       },
     };
 
-    const options = {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    };
-
-    fetch(
-      "http://www.mapquestapi.com/geocoding/v1/batch?key=FHZdqT8GWrAggBJLnSnDzjqFA9hbsMdc",
-      options
-    )
+    fetch(api.geo, getOptions(data))
       .then((response) => {
-        console.log("response", response);
-
-        return response.json();
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Something went wrong");
+        }
       })
-      .then((res) => {
-        console.log("res", res);
-
-        const coordinates = res.results[0].locations[0].latLng;
+      .then((responseJson) => {
+        const coordinates = responseJson.results[0].locations[0].latLng;
 
         setMarker([coordinates.lng, coordinates.lat]);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
-    fetch("/world-110m.json").then((response) => {
-      if (response.status !== 200) {
-        console.log(`There was a problem: ${response.status}`);
-        return;
-      }
-      response.json().then((worlddata) => {
+    fetch("/world-110m.json")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Something went wrong");
+        }
+      })
+      .then((responseJson) => {
         setGeographies(
-          feature(worlddata, worlddata.objects.countries).features
+          feature(responseJson, responseJson.objects.countries).features
         );
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   }, []);
 
   const handleCountryClick = (countryIndex) => {
@@ -82,7 +75,7 @@ const WorldMap = ({ places }) => {
             key={`path-${i}`}
             d={geoPath().projection(projection)(d)}
             className="country"
-            fill={`rgba(38,50,56,${(1 / geographies.length) * i})`}
+            // fill={`rgba(38,50,56,${(1 / geographies.length) * i})`}
             stroke="#FFFFFF"
             strokeWidth={0.5}
             onClick={() => handleCountryClick(i)}

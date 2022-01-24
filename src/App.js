@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import "./App.scss";
-import Table from "./components/Table";
+import Table from "./components/Table/Table";
 import UploadButton from "./components/UploadButton";
 import WorldMap from "./components/WorldMap";
 import options from "./utils/options.json";
 import Paper from "./Layout/Paper";
+import Button from "./components/Button/Button";
+import "./App.scss";
 
 const getId = () => Math.random();
 
 function App() {
-  const [csvFile, setCsvFile] = useState();
+  const [csvFile, setCsvFile] = useState(null);
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [places, setPlaces] = useState([]);
   const { select } = options;
 
-  useEffect(() => {}, [columns]);
+  useEffect(() => csvFile && submit(), [csvFile]);
 
   const processCSV = (str, delim = ",") => {
     const rawRows = str.split("\n");
@@ -111,35 +112,25 @@ function App() {
 
   return (
     <div className="App">
-      <Paper>
+      <Paper gridArea="upload">
         <UploadButton
-          onFileSelectSuccess={(file) => {
-            console.log("file", file);
-            setCsvFile(file);
-          }}
+          onFileSelectSuccess={(file) => setCsvFile(file)}
           onFileSelectError={({ error }) => alert(error)}
         />
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-
-            submit();
-          }}
-        >
-          Apply
-        </button>
       </Paper>
       {rows.length > 0 && (
-        <Paper>
-          <Table rows={rows} columns={columns} selectChange={selectChange} />
-        </Paper>
+        <>
+          <Paper gridArea="table">
+            <Table rows={rows} columns={columns} selectChange={selectChange} />
+          </Paper>
+          <Paper gridArea="transform">
+            <Button doClick={transformData} label="Transform" />
+          </Paper>
+        </>
       )}
-      <Paper>
-        <button onClick={transformData}>Transform</button>
-      </Paper>
 
       {places.length > 0 && (
-        <Paper>
+        <Paper gridArea="map">
           <WorldMap places={places} />{" "}
         </Paper>
       )}

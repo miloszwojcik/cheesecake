@@ -1,5 +1,6 @@
 import React from "react";
-import Select from "./Select";
+import Select from "../Select";
+import "./Table.scss";
 
 export default function Table({ columns, rows, selectChange }) {
   return (
