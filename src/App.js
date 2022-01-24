@@ -4,6 +4,7 @@ import Table from "./components/Table";
 import UploadButton from "./components/UploadButton";
 import WorldMap from "./components/WorldMap";
 import options from "./utils/options.json";
+import Paper from "./Layout/Paper";
 
 const getId = () => Math.random();
 
@@ -90,11 +91,9 @@ function App() {
 
     reader.onload = function (e) {
       const text = e.target.result;
-      console.log(text);
+
       processCSV(text);
     };
-
-    console.log("reader", reader);
 
     reader.readAsText(csvFile);
   };
@@ -112,7 +111,7 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <Paper>
         <UploadButton
           onFileSelectSuccess={(file) => {
             console.log("file", file);
@@ -129,12 +128,21 @@ function App() {
         >
           Apply
         </button>
-      </div>
+      </Paper>
       {rows.length > 0 && (
-        <Table rows={rows} columns={columns} selectChange={selectChange} />
+        <Paper>
+          <Table rows={rows} columns={columns} selectChange={selectChange} />
+        </Paper>
       )}
-      <button onClick={transformData}>Transform</button>
-      {places.length > 0 && <WorldMap places={places} />}
+      <Paper>
+        <button onClick={transformData}>Transform</button>
+      </Paper>
+
+      {places.length > 0 && (
+        <Paper>
+          <WorldMap places={places} />{" "}
+        </Paper>
+      )}
     </div>
   );
 }

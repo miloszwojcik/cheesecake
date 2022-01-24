@@ -13,8 +13,8 @@ const WorldMap = ({ places }) => {
   useEffect(() => {
     const data = {
       locations: places.map((place) => ({
-        street: place.find((v) => v.type === "address").label,
-        postalCode: place.find((v) => v.type === "zip").label,
+        street: place.find((v) => v.type === "street").label,
+        postalCode: place.find((v) => v.type === "postalCode").label,
         city: place.find((v) => v.type === "city").label,
       })),
       options: {

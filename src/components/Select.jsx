@@ -9,6 +9,7 @@ const Select = ({ column, selectChange }) => {
 
   return (
     <select
+      className="select btn-primary"
       key={id}
       onChange={(e) => selectChange({ id, value: e.target.value })}
       value={value}

@@ -2,8 +2,8 @@
   "select": [
     { "label": "City", "value": "city" },
     { "label": "State", "value": "state" },
-    { "label": "Zip", "value": "zip" },
-    { "label": "Address", "value": "address" },
+    { "label": "Zip", "value": "postalCode" },
+    { "label": "Address", "value": "street" },
     { "label": "Category", "value": "category" }
   ]
 }
