@@ -1,13 +1,14 @@
 import React from "react";
+import Select from "./Select";
 
-export default function Table({ columns, rows, getSelect }) {
+export default function Table({ columns, rows, selectChange }) {
   return (
     <div className="table" role="table" aria-label="location table">
       <div className="rowgroup" role="rowgroup">
         <div className="row" role="row">
           {columns.map((column, i) => (
             <span className="columnheader" role="columnheader" key={i}>
-              {getSelect(column)}
+              <Select column={column} selectChange={selectChange} />
             </span>
           ))}
         </div>

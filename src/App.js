@@ -3,24 +3,16 @@ import "./App.scss";
 import Table from "./components/Table";
 import UploadButton from "./components/UploadButton";
 import WorldMap from "./components/WorldMap";
+import options from "./utils/options.json";
 
 const getId = () => Math.random();
-
-const options = [
-  { label: "City", value: "city" },
-  { label: "State", value: "state" },
-  { label: "Zip", value: "zip" },
-  { label: "Address", value: "address" },
-  { label: "Category", value: "category" },
-];
-
-const limitText = "Max number of columns exceeded";
 
 function App() {
   const [csvFile, setCsvFile] = useState();
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [places, setPlaces] = useState([]);
+  const { select } = options;
 
   useEffect(() => {}, [columns]);
 
@@ -40,8 +32,8 @@ function App() {
         ...columns,
         {
           id: idArray[i],
-          value: options[i]?.value || "none",
-          label: options[i]?.label || "none",
+          value: select[i]?.value || "none",
+          label: select[i]?.label || "none",
         },
       ];
     }
@@ -70,7 +62,7 @@ function App() {
           return {
             ...col,
             value,
-            label: options.find((opt) => opt.value === value)?.label || null,
+            label: select.find((opt) => opt.value === value)?.label || null,
           };
         }
 
@@ -92,23 +84,6 @@ function App() {
       return removeRepeatedValue;
     });
   };
-
-  const getSelect = ({ id, value }) => (
-    <select
-      key={id}
-      onChange={(e) => selectChange({ id, value: e.target.value })}
-      value={value}
-    >
-      <option value="none" disabled hidden>
-        {limitText}
-      </option>
-      {options.map(({ value, label }) => (
-        <option key={value} value={value}>
-          {label}
-        </option>
-      ))}
-    </select>
-  );
 
   const submit = () => {
     const reader = new FileReader();
@@ -156,7 +131,7 @@ function App() {
         </button>
       </div>
       {rows.length > 0 && (
-        <Table rows={rows} columns={columns} getSelect={getSelect} />
+        <Table rows={rows} columns={columns} selectChange={selectChange} />
       )}
       <button onClick={transformData}>Transform</button>
       {places.length > 0 && <WorldMap places={places} />}
